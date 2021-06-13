@@ -144,8 +144,105 @@ Space Complexity: O(n)
 
 첫번째의 경우 는 sort 를 하고 또 for loop 을 돌면서 missing number 을 찾아야해서 코드도 길어지고 런타임도 효율적이지 못했으나 두번째 경우에는 set 자체가 O(1) 밖에 안되고 그냥 set이 알아서 sort 도 해주기 때문에 set 길이 만큼 을 for loop 돌면서 없는값을 리턴 해주면 된다. 이경우가 코드도 간단하고 당연히 런타임도 효율적이다. 
 
+### Problem 283: Majority Element
+[Move Zeros](https://leetcode.com/problems/move-zeroes/)
 
+Given an integer array nums, move all 0's to the end of it while maintaining the relative order of the non-zero elements.
+
+#### Approach 1
+1) Two pointer 방법으로 문제를 접근한다
+2) slow 는 원소 0 의 index, 그리고 fast 는 0이 아닌 숫자 index 지정해준다
+3) for loop 안에서 nums[fast] 가 양수, nums[slow] 가 0 일때 스왑 해준다 그리고 slow 값을 1 더해서 다음값을 track 하도록 한다 
+4) slow 값을 계속 increment 해야지 계속 비교 하고 스왑 할 수 있다. 
+
+[0, 1, 0, 3, 12]
+slow
+fast
+
+[0, 1, 0, 3, 12]    --> swap(nums[slow], nums[fast])
+slow                    slow += 1
+   fast                 
+
+[1, 0, 0, 3, 12]
+   slow 
+      fast
+
+[1, 0, 0, 3, 12]    --> swap(nums[slow], nums[fast]) 
+   slow                 slow += 1
+          fast          
+
+[1, 3, 0, 0,  12]   --> swap(nums[slow], nums[fast]) 
+      slow              slow += 1
+              fast
+
+[1, 3, 12 , 0,  0]
+           slow 
+                fast
+
+```python
+class Solution283:
+    def moveZeroes(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        slow = 0
+        
+        for fast in range(0,len(nums)):
+            if nums[fast] != 0 and nums[slow] == 0:
+                nums[slow], nums[fast] = nums[fast], nums[slow]
+                slow += 1
+        
+            if nums[slow] != 0:
+                slow += 1
+```
+
+Runtime: O(n)
+
+Space Complexity: O(1)
                 
         
+### Problem 28: Majority Element
+[Pascal's Triangle](https://leetcode.com/problems/pascals-triangle/)
 
+Given an integer numRows, return the first numRows of Pascal's triangle.
+
+#### Approach 1 
+1) Brute Force 로 approach 한다
+2) 다음 list 가 현재 list 원소 값으로 이루어지므로  next_arr 를 만든다
+3) 전체 list 를 닮을 res list 를 만들고 초기값 [1] 을 넣어준다
+3) edge case 인 numRow 가 1 일때와 numRow 0 일때 return 값을 지정한다
+4) for loop 을 돌면서 next_arr 에 처음값과 끝값에 1을 넣어준다
+5) 중간값들을 구하기 위해서 for loop 안에서 그전 list 웒소들을 더하면서 next_arr에 저장한다.
+5) next_arr 를 res 에 넣은 후 다시 비워준다
+
+```python 
+class Solution:
+    def generate(self, numRows: int) -> List[List[int]]:
+        start = 1
+        res = []
+        next_arr = []
+        res.append([1])
+        
+        if numRows == 0:
+            return []
+        if numRows == 1:
+            return [[1]]
+        
+        for i in range(1, numRows): 
+            next_arr.append(1)
+            for j in range(1,i): 
+                next_arr.append(res[i-1][j-1] + res[i-1][j])
+                
+            next_arr.append(1)
+            res.append(next_arr)
+            next_arr = []
+            
+        return res
+
+```
+
+Runtime: O(n^2)
+
+Space Complexity: O(n^2)
+    
 
